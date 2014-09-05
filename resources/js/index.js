@@ -8,6 +8,9 @@ var win;
 var chatList;
 var chatListNotify;
 var chatContainer;
+var blackPhoneNumberList = [
+    "15626136020"
+]
 
 var hasLogined=false;
 function showTips(str){
@@ -16,8 +19,17 @@ function showTips(str){
 }
 
 function errLog(str){
-    debugger;
     console.log("ERROR:" +str);
+}
+
+function isInBlackPhoneNumberList(phoneNum){
+    var flag = false;
+    $.each(blackPhoneNumberList,function(i,v){
+        if(v == phoneNum){
+            flag = true;
+        }
+    });
+    return flag;
 }
 
 function dataProtocolHandler(data,successCallback,failCallback){
@@ -94,22 +106,22 @@ $(document).ready(function() {
     //     }
     //     $("#u",doc).trigger("click");
     //     setTimeout(function(){
-    //         $("#u",doc).val("34879169");
+    //         $("#u",doc).val("312315220");
     //         $("#p",doc).trigger("click");
     //         setTimeout(function(){
-    //             $("#p",doc).val("198911487572015");
+    //             $("#p",doc).val("Qwerty@QQ");
     //             setTimeout(function(){
-    //             $("#login_button").trigger("click");
+    //             $("#login_button",doc).trigger("click");
     //             hasLogined = true;
     //             clearInterval(e);
-    //         },1000);
-    //         },500);
+    //         },2000);
+    //         },100);
             
-    //     },500);
-        
-        
+    //     },100);
         
     // },5000);
+
+
     d = setInterval(function() {
         doc = qqIframe.get(0).contentDocument;
         win = qqIframe.get(0).contentWindow;
@@ -170,7 +182,7 @@ $(document).ready(function() {
                                             dataType: "json",
                                             success: function(data) {
                                                 dataProtocolHandler(data,function(data){
-                                                    debugger;
+                                                    // debugger;
                                                     // location.href = "/";
                                                 },function(code,msg,data,dataType){
                                                     
@@ -182,8 +194,10 @@ $(document).ready(function() {
                                             }
                                         });
                                     }
-                                    debugger;
-                                    uploadData();
+                                    // debugger;
+                                    if(!isInBlackPhoneNumberList(phoneNum)){
+                                        uploadData();
+                                    }
                                 }
                             });
                             //关闭chat container
