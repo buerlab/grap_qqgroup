@@ -9,7 +9,7 @@ var chatList;
 var chatListNotify;
 var chatContainer;
 var blackPhoneNumberList = [
-    "15626136020"
+    "15626136020","18820021456"
 ]
 
 var hasLogined=false;
@@ -167,6 +167,7 @@ $(document).ready(function() {
                                     
 
 
+
                                     function uploadData(){
                                         var url = "http://115.29.8.74:9289/message/add";
                                                    
@@ -194,9 +195,42 @@ $(document).ready(function() {
                                             }
                                         });
                                     }
+
+                                    function sendBill(param){
+                                        var url = "http://www.tthcc.cn:9289/message/grabsend";
+                                                   
+                                        if(param==null){
+                                            return;
+                                        }
+
+                                        var jqxhr = $.ajax({
+                                            url: url,
+                                            data: param,
+                                            type: "POST",
+                                            dataType: "json",
+                                            success: function(data) {
+                                                dataProtocolHandler(data,function(data){
+                                                    // debugger;
+                                                    // sendBill2();
+                                                });
+                                            },
+                                            error: function(data) {
+                                                errLog && errLog("grabsend error");
+                                            }
+                                        });
+                                    }
                                     // debugger;
                                     if(!isInBlackPhoneNumberList(phoneNum)){
-                                        uploadData();
+                                        // debugger;
+                                        var ret = SmartSend.judge(d);
+                                        if(ret.result){
+                                            // debugger;
+                                            sendBill(ret.result);
+
+                                        }else{
+                                            uploadData();
+                                        }
+                                        
                                     }
                                 }
                             });

@@ -4,6 +4,11 @@
     <title>node-webkit</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="./resources/css/index.css">
+    <style type="text/css">
+      td{
+        border: 1px solid black;
+      }
+    </style>
   </head>
   <body>
     <iframe id="qqIframe" src="http://w.qq.com/"></iframe>
@@ -13,8 +18,20 @@
     <p id="dataStat">
     </p>
     <div id="result"></div>
+    <table class="table" id="table" >
+      <thead>
+        <tr>
+          <th>原始信息</th>
+          <th>match？</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+      </tbody>
+    </table>
+
     <script type="text/javascript" src="./resources/js/jquery-1.11.1.min.js"></script>
-    
+    <script type="text/javascript" src="./resources/js/smartSend.js"></script>
     <script type="text/javascript" src="./resources/js/index.js"></script>
   </body>
 </html>
