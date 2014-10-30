@@ -1,3 +1,5 @@
+(function(){
+
 var result;
 var qqIframe;
 var map;
@@ -14,7 +16,7 @@ var blackPhoneNumberList = [
 
 var hasLogined=false;
 function showTips(str){
-    alert(str);
+    // alert(str);
     console.log(str);
 }
 
@@ -246,6 +248,7 @@ $(document).ready(function() {
         
 
     }, 10000);
-
-
 });
+
+
+})();

@@ -1,10 +1,28 @@
-var _d = {
+var _d = [{
     phonenum:"13828492594",
-    content:"早上恵阳新墟有9米6箱车求货回广州18620510345任",
+    content:"广州太和4.3米开顶货车专业运输珠三角货源，长短期合作均可，有货源的老板请致电18565102418 18620430271小邓",
     groupname:"佛山物流信息货运信息",
     nickname:"原速车队~~",
     groupid:"1775225090"
-}
+},{
+    phonenum:"13828492594",
+    content:"广州白云区长期出租大货车，有多台9米6前四后八，专业的珠三角短途整车运输，另求长期稳定货源，长途可跑，联系13710278828小成，此信息长年有效",
+    groupname:"佛山物流信息货运信息",
+    nickname:"原速车队~~",
+    groupid:"1775225090"
+},{
+    phonenum:"13828492594",
+    content:"广州市黄埔区有两年6.8箱式货车转让，东风天锦4.160联系电话13016046542",
+    groupname:"佛山物流信息货运信息",
+    nickname:"原速车队~~",
+    groupid:"1775225090"
+},{
+    phonenum:"13828492594",
+    content:"每天有货从东莞大岭山到中山东升，东凤，有7米6，9米6，13米的回程车朋友公司可以私聊18666267734",
+    groupname:"佛山物流信息货运信息",
+    nickname:"原速车队~~",
+    groupid:"1775225090"
+}]
 
 var SmartSend = (function(){
     
@@ -96,6 +114,9 @@ var SmartSend = (function(){
 
             "佛冈" : "广东-清远-佛冈",
             
+            "汕头" : "广东-汕头-澄海",
+            "澄海" : "广东-汕头-澄海",
+
             "江门蓬江" : "广东-江门-蓬江",
             "蓬江" : "广东-江门-蓬江",
             "江门鹤山" :"广东-江门-鹤山",
@@ -127,11 +148,11 @@ var SmartSend = (function(){
             "云浮" : "广东-云浮-不限",
             "汕尾" : "广东-汕尾-不限",
             "揭阳" : "广东-揭阳-不限",
-            "潮州" : "广东-潮州-不限",
-            "南宁" : "广西-南宁-不限",
-            "桂林" : "广西-桂林-不限",
-            "江西上饶" : "江西-上饶-不限",
-            "珠三角" : "广东-不限-不限",
+            "潮州" : "广东-潮州-不限"
+            // "南宁" : "广西-南宁-不限",
+            // "桂林" : "广西-桂林-不限",
+            // "江西上饶" : "江西-上饶-不限",
+            // "珠三角" : "广东-不限-不限",
         };
         a = str;
 
@@ -142,6 +163,35 @@ var SmartSend = (function(){
         var a1 = null;
         var a2 = null;
         var msg = "";
+
+        var str = str.replace("回程","").replace("回头","");
+
+        var daoIndex = (function(str){
+            var index;
+            if(str.indexOf("到")>=0){
+                return str.indexOf("到");
+            }
+            if(str.indexOf("—")>=0){
+                return str.indexOf("—");
+            }
+            if(str.indexOf("回")>=0){
+                return str.indexOf("回");
+            }
+
+            if(str.indexOf("去")>=0){
+                return str.indexOf("去");
+            }
+
+            return -1;
+        })(str);
+
+        if(daoIndex == -1){
+            return {
+                result: false,
+                msg : "没有 到、回、去的关键词"
+            };
+        }
+
         $.each(locationMap,function(k,v){
 
             if(!fromFlag && b.indexOf(k) >=0){
@@ -171,7 +221,7 @@ var SmartSend = (function(){
 
             if(!flag3 && b.indexOf(k) >=0){
                 flag3 = true;
-                msg = "有3个地址";
+                msg = "地址超过2个";
             }
         });
 
@@ -186,7 +236,21 @@ var SmartSend = (function(){
                     "from" : a2.value,
                     "to" : a1.value
                 }
-            }   
+            }
+
+            if(a.indexOf(a1.key) > daoIndex && a.indexOf(a2.key)> daoIndex){
+                return {
+                    result: false,
+                    msg : "两个地址在 到 的同一边，可能不太对"
+                };
+            }
+
+            if(a.indexOf(a1.key) < daoIndex && a.indexOf(a2.key) < daoIndex){
+                return {
+                    result: false,
+                    msg : "两个地址在 到 的同一边，可能不太对"
+                };
+            }
             return {
                 result : ret,
                 msg : "success"
@@ -206,8 +270,24 @@ var SmartSend = (function(){
     }
 
     var isGoodsOrTrunk = function(str){
-        var askTrunk = [/货讯/,/求.*车/,/有车/,/有回程车/,/求回程车/,/找回程车/,/需.*回程/,/回程车速电/,/要.*的车/,/车.*联系/];
-        var askGoods = [/车讯/,/求货/,/有货/,/有.*的货/,/空车/,/待货/,/求.*货/];
+        var askTrunk = [/货讯/,
+                        /求.*车/,
+                        /有车速电/,
+                        /有回程车/,
+                        /求回程车/,
+                        /找回程车/,
+                        /需.*回程/,
+                        /回程车速电/,
+                        /要.*的车/,
+                        /有.*车.*联系/
+                        ];
+        var askGoods = [/车讯/,
+                        /求货/,
+                        /有货/,
+                        /有.*的货/,
+                        /空车/,
+                        /待货/,
+                        /求.*货/];
 
         var flag = false;
         var msg = "不知道是货源还是车源";
@@ -235,6 +315,43 @@ var SmartSend = (function(){
             result: flag,
             msg : msg
         };;
+    }
+
+    var isRubish = function(data){
+        if(data.content.length >100){
+            return {
+                result : false,
+                msg : "太长了"
+            }
+        }
+
+        var rubish = [/长短期合作/,
+                        /每天/,
+                        /长年有效/,
+                        /长期有效/,
+                        /出租/,
+                        // /转让/
+                        /税/
+                        ];
+        var flag = false;
+        var msg = "success";
+
+        $.each(rubish,function(k,v){
+            debugger;
+            var ret = v.exec(data.content);
+            if(ret){
+                flag =  true;
+                msg = "垃圾信息";
+            }
+        });
+
+        return {
+            result : flag,
+            msg : msg
+        }
+
+
+
     }
 
     var retData = {};
@@ -275,28 +392,45 @@ var SmartSend = (function(){
         a = a.replace(/\r/g,""); //去掉\r
         a = a.replace(/\n/g,""); //去掉\n
         a = a.replace(/货讯：/g,"").replace(/车讯：/g,"").replace(/货讯:/g,"").replace(/车讯:/g,"");   //去掉货讯车讯
+        a = a.replace(/QQ上不回复/g,"");  
+        a = a.replace(/[自定义表情]/g,""); 
         return a;
     }
 
-    var getSenderName = function(billType, data){
+    var getSenderName = function(billType, str, fromTo,phonenum){
         var names = ['王','李','张','刘','陈','杨','赵','黄','周','吴','徐','孙','胡','朱',
-            '林','何','郭','罗','梁','宋','郑','唐','韩','冯','董','萧','程','曹','谭','余',
+            '林','何','郭','梁','宋','郑','唐','韩','冯','董','萧','程','曹','谭','余','任',
             '袁','邓','沈','曾','吕','苏','卢','蒋','蔡','贾','薛','魏','章'];
         var name;
-
-        if(billType == "goods"){
+        debugger;
+        if(billType.result == "goods"){
             name= "货源";
         }else{
             name= "车源";
         }
 
+        var str = str.replace(fromTo.from, "").replace(fromTo.to, "");
+
         $.each(names,function(k,v){
-            if(data.content.indexOf(v)>=0){
-                if(billType == "goods"){
-                    name= v + "先生";
-                }else{
-                    name= v + "师傅";
+            if(str.indexOf(v)>=0){
+
+                var phonenumIndex = str.indexOf(phonenum);
+                var nameIndex = str.indexOf(v);
+                var flag = false;
+                debugger;
+                if(nameIndex>phonenumIndex && nameIndex -phonenumIndex < 15){
+                    flag = true;
+                }else if(nameIndex < phonenumIndex && phonenumIndex - nameIndex< 5){
+                    flag = true;
                 }
+                if(flag){
+                    if(billType == "goods"){
+                        name= v + "先生";
+                    }else{
+                        name= v + "师傅";
+                    }
+                }
+                
             }
         });
         return name;
@@ -309,7 +443,13 @@ var SmartSend = (function(){
         if(ret){
             return ret[0].split("吨").join("");
         }else{
-            return null;
+            var pattern2=/\d+T|\d+\.\d+T/;
+            var ret = pattern.exec(str);
+            if(ret){
+                return ret[0].split("T").join("");
+            }else{
+                return null;
+            }
         }
     }
 
@@ -446,19 +586,18 @@ var SmartSend = (function(){
             }
         }
 
-        if(data.content.length >100){
-            return {
-                result : false,
-                msg : "太长了"
-            }
+        var rubish = isRubish(data);
+        if(rubish.result){
+            return rubish;
         }
+        
 
         /***************************** 开始抓数据 ******************/
 
         retData.billTime = getBillTime(data);
         retData.validTimeSec = getValidTimeSec(data);
         retData.comment = getComment(data);
-        retData.senderName = getSenderName(billType,data);
+        retData.senderName = getSenderName(billType,data.content,fromTo.result,retData.phoneNum);
         retData.sender = adminUserId;
         retData.userId = adminUserId;
         retData.qqgroup = data.groupname;
@@ -466,7 +605,7 @@ var SmartSend = (function(){
         retData.rawText = data.content;
         retData.sendTime = (+new Date())/1000;
         retData.editor = "teddywu";
-        
+
         if(billType.result == "goods"){
             retData.price = null;
             retData.weight = getWeight(data.content);
@@ -522,8 +661,8 @@ function getMessage(){
     var url = "http://localhost:9289/test/message/get";
                
     var param = {
-        "from" : 92000,
-        "count" : 1000
+        "from" : 94000,
+        "count" : 1500
     }
     var jqxhr = $.ajax({
         url: url,
@@ -596,4 +735,7 @@ function getMessage(){
 
 // getMessage();
 
-// console.log(SmartSend.judge(_d).result);
+// $.each(_d,function(k,v){
+//     console.log(SmartSend.judge(v).result);
+//     console.log(SmartSend.judge(v).msg);
+// });
